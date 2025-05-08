@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Cardápio - Assados Perobal</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #2c2c2c; /* Fundo escuro */
+      color: #f1f1f1; /* Texto claro */
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+
+    h1 {
+      font-size: 50px;
+      color: #ff5722; /* Laranja queimado */
+      margin-bottom: 40px;
+      text-align: center;
+      text-transform: uppercase;
+      font-weight: bold;
+      border-bottom: 5px solid #ff5722; /* Linha vibrante */
+      padding-bottom: 10px;
+    }
+
+    .categoria {
+      width: 100%;
+      max-width: 700px;
+      margin-bottom: 40px;
+    }
+
+    .categoria h2 {
+      font-size: 32px;
+      color: #ff5722;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      border-bottom: 2px solid #ff5722;
+      padding-bottom: 10px;
+    }
+
+    .item {
+      background-color: #424242; /* Fundo escuro */
+      border: 1px solid #ff5722; /* Bordas vibrantes */
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    .item strong {
+      font-size: 22px;
+      color: #ff5722; /* Laranja para destaque */
+    }
+
+    .item .price {
+      float: right;
+      font-size: 20px;
+      font-weight: bold;
+      color: #ff9800; /* Laranja mais suave */
+    }
+
+    .item .descricao {
+      display: block;
+      margin-top: 8px;
+      font-size: 14px;
+      color: #f1f1f1; /* Texto claro */
+    }
+
+    form, .remover, .editar {
+      background-color: #424242; /* Fundo escuro */
+      width: 100%;
+      max-width: 700px;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      margin-top: 50px;
+      margin-bottom: 50px;
+    }
+
+    form input, form select, form button, .remover select, .remover button, .editar select, .editar input, .editar button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ff5722; /* Bordas laranja */
+      font-size: 16px;
+      background-color: #333;
+      color: #f1f1f1;
+    }
+
+    form button, .remover button, .editar button {
+      background-color: #ff5722; /* Cor chamativa */
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    form button:hover, .remover button:hover, .editar button:hover {
+      background-color: #e64a19; /* Efeito hover mais escuro */
+    }
+
+    .categoria select {
+      font-size: 16px;
+    }
+
+    /* Responsividade */
+    @media screen and (max-width: 768px) {
+      h1 {
+        font-size: 40px;
+      }
+
+      .categoria h2 {
+        font-size: 28px;
+      }
+
+      .item strong {
+        font-size: 20px;
+      }
+
+      .item .price {
+        font-size: 18px;
+      }
+
+      .item .descricao {
+        font-size: 12px;
+      }
+    }
+
+    /* Efeito de impressão */
+    @media print {
+      body {
+        font-size: 14px;
+      }
+
+      form, .remover, .editar {
+        display: none;
+      }
+
+      .item {
+        border: none;
+        box-shadow: none;
+        margin-bottom: 5px;
+      }
+
+      .item .price {
+        float: none;
+        margin-top: 5px;
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Cardápio - Assados Perobal</h1>
+
+  <div class="categoria" id="espetinho">
+    <h2>Espetinho</h2>
+  </div>
+
+  <div class="categoria" id="adicionais">
+    <h2>Adicionais</h2>
+  </div>
+
+  <div class="categoria" id="bebidas">
+    <h2>Bebidas</h2>
+  </div>
+
+  <form id="formAdicionar">
+    <h2>Adicionar Novo Item</h2>
+    <input type="text" id="nome" placeholder="Nome do produto" required>
+    <input type="text" id="descricao" placeholder="Descrição do produto (opcional)">
+    <input type="number" id="preco" placeholder="Preço (ex: 12.50)" step="0.01" required>
+    <select id="categoria" required>
+      <option value="">Escolha a categoria</option>
+      <option value="espetinho">Espetinho</option>
+      <option value="adicionais">Adicionais</option>
+      <option value="bebidas">Bebidas</option>
+    </select>
+    <button type="submit">Adicionar ao Cardápio</button>
+  </form>
+
+  <div class="remover">
+    <h2>Remover Produto</h2>
+    <select id="selectRemover">
+      <option value="">Escolha o produto a remover</option>
+    </select>
+    <button onclick="removerProduto()">Remover Produto</button>
+  </div>
+
+  <div class="editar">
+    <h2>Editar Produto</h2>
+    <select id="selectEditar">
+      <option value="">Escolha o produto a editar</option>
+    </select>
+    <input type="text" id="novoNome" placeholder="Novo nome do produto">
+    <input type="text" id="novaDescricao" placeholder="Nova descrição do produto (opcional)">
+    <input type="number" id="novoPreco" placeholder="Novo preço (ex: 12.50)" step="0.01">
+    <button onclick="editarProduto()">Editar Produto</button>
+  </div>
+
+  <script>
+    const form = document.getElementById('formAdicionar');
+    const selectRemover = document.getElementById('selectRemover');
+    const selectEditar = document.getElementById('selectEditar');
+
+    function salvarNoStorage(produtos) {
+      localStorage.setItem('produtosAdicionados', JSON.stringify(produtos));
+    }
+
+    function carregarDoStorage() {
+      return JSON.parse(localStorage.getItem('produtosAdicionados')) || [];
+    }
+
+    function criarItemHTML(produto) {
+      const item = document.createElement('div');
+      item.className = 'item';
+      item.innerHTML = `
+        <strong>${produto.nome}</strong> <span class="price">R$ ${produto.preco.replace('.', ',')}</span><br>
+        ${produto.descricao ? `<span class="descricao">${produto.descricao}</span>` : ''}
+      `;
+      return item;
+    }
+
+    function exibirProduto(produto) {
+      const container = document.getElementById(produto.categoria);
+      const item = criarItemHTML(produto);
+      container.appendChild(item);
+
+      // Adiciona o produto no select para remoção e edição
+      const optionRemover = document.createElement('option');
+      optionRemover.value = produto.id;
+      optionRemover.textContent = `${produto.nome} - ${produto.categoria}`;
+      selectRemover.appendChild(optionRemover);
+
+      const optionEditar = document.createElement('option');
+      optionEditar.value = produto.id;
+      optionEditar.textContent = `${produto.nome} - ${produto.categoria}`;
+      selectEditar.appendChild(optionEditar);
+    }
+
+    function atualizarLista() {
+      const categorias = ['espetinho', 'adicionais', 'bebidas'];
+      categorias.forEach(cat => {
+        const container = document.getElementById(cat);
+        container.innerHTML = `<h2>${container.querySelector('h2').innerText}</h2>`;
+      });
+
+      const produtos = carregarDoStorage();
+      selectRemover.innerHTML = `<option value="">Escolha o produto a remover</option>`; // Limpar antes de atualizar
+      selectEditar.innerHTML = `<option value="">Escolha o produto a editar</option>`; // Limpar antes de atualizar
+      produtos.forEach(produto => {
+        exibirProduto(produto);
+      });
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const nome = document.getElementById('nome').value.trim();
+      const descricao = document.getElementById('descricao').value.trim();
+      const preco = parseFloat(document.getElementById('preco').value).toFixed(2);
+      const categoria = document.getElementById('categoria').value;
+
+      if (!nome || isNaN(preco) || !categoria) return;
+
+      const novoProduto = {
+        id: Date.now(),
+        nome,
+        descricao: descricao || null,  // Descrição agora pode ser vazia ou nula
+        preco,
+        categoria
+      };
+
+      const produtos = carregarDoStorage();
+      produtos.push(novoProduto);
+      salvarNoStorage(produtos);
+      atualizarLista();
+
+      form.reset();
+    });
+
+    function removerProduto() {
+      const produtoId = selectRemover.value;
+      if (!produtoId) return;
+
+      const produtos = carregarDoStorage();
+      const produtosRestantes = produtos.filter(produto => produto.id !== parseInt(produtoId));
+      salvarNoStorage(produtosRestantes);
+      atualizarLista();
+    }
+
+    function editarProduto() {
+      const produtoId = selectEditar.value;
+      if (!produtoId) return;
+
+      const novoNome = document.getElementById('novoNome').value.trim();
+      const novaDescricao = document.getElementById('novaDescricao').value.trim();
+      const novoPreco = parseFloat(document.getElementById('novoPreco').value).toFixed(2);
+
+      const produtos = carregarDoStorage();
+      const produto = produtos.find(produto => produto.id === parseInt(produtoId));
+
+      if (novoNome) produto.nome = novoNome;
+      if (novaDescricao !== "") produto.descricao = novaDescricao; // Permite descrição vazia
+      if (!isNaN(novoPreco)) produto.preco = novoPreco;
+
+      salvarNoStorage(produtos);
+      atualizarLista();
+    }
+
+    // Inicializa a lista ao carregar a página
+    atualizarLista();
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
