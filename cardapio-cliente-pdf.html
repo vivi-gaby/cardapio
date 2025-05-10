@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cardápio PDF - Assados Perobal</title>
+  <style>
+    body {
+      background-color: #1e1e1e;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #ff7f00;
+      text-align: center;
+    }
+
+    .categoria {
+      margin-top: 30px;
+      page-break-inside: avoid;
+    }
+
+    .categoria h2 {
+      color: #ff7f00;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #444;
+      padding-bottom: 5px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      background-color: #333;
+      margin-bottom: 5px;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .produto {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .descricao {
+      font-size: 0.9em;
+      color: #ccc;
+      margin-top: 4px;
+    }
+
+    .print-button {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .print-button button {
+      background-color: #ff7f00;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    @media print {
+      body {
+        background-color: #fff;
+        color: #000;
+      }
+
+      h1, .categoria h2 {
+        color: #000;
+      }
+
+      li {
+        background-color: #fff;
+        border: 1px solid #000;
+        color: #000;
+      }
+
+      .descricao {
+        color: #000;
+      }
+
+      .print-button {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="print-button">
+    <button onclick="window.print()">Salvar como PDF</button>
+  </div>
+
+  <h1>Cardápio - Assados Perobal</h1>
+
+  <div class="categoria" id="espetinho">
+    <h2>Espetinho</h2>
+    <ul id="lista-espetinho"></ul>
+  </div>
+
+  <div class="categoria" id="adicionais">
+    <h2>Adicionais</h2>
+    <ul id="lista-adicionais"></ul>
+  </div>
+
+  <div class="categoria" id="bebidas">
+    <h2>Bebidas</h2>
+    <ul id="lista-bebidas"></ul>
+  </div>
+
+  <div class="categoria" id="cervejas">
+    <h2>Cervejas</h2>
+    <ul id="lista-cervejas"></ul>
+  </div>
+
+  <script>
+    const produtos = JSON.parse(localStorage.getItem('cardapio')) || {
+      espetinho: [],
+      adicionais: [],
+      bebidas: [],
+      cervejas: []
+    };
+
+    function renderizarCliente() {
+      ['espetinho', 'adicionais', 'bebidas', 'cervejas'].forEach(categoria => {
+        const ul = document.getElementById('lista-' + categoria);
+        ul.innerHTML = '';
+
+        produtos[categoria].forEach(item => {
+          const li = document.createElement('li');
+          li.innerHTML = `
+            <div class="produto">
+              <span>${item.nome}</span>
+              <span>R$ ${item.preco}</span>
+            </div>
+            ${item.descricao ? `<div class="descricao">${item.descricao}</div>` : ''}
+          `;
+          ul.appendChild(li);
+        });
+      });
+    }
+
+    renderizarCliente();
+  </script>
+</body>
+</html>
+
+
+
